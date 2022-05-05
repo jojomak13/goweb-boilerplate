@@ -5,9 +5,9 @@ import (
 )
 
 type User struct {
-	ID        uint `gorm:"primarykey"`
+	ID        uint `json:"id" gorm:"primarykey"`
 	Name      string `json:"name" validate:"required"`
 	Email     string `json:"email" validate:"required,email"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

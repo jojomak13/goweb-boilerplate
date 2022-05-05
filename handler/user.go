@@ -10,8 +10,14 @@ import (
 )
 
 func GetUsers(c *fiber.Ctx) error{
+	db := core.DB
+	users := new([]model.User)
+
+	db.Find(&users)
+
 	return c.JSON(fiber.Map{
-		"message": "Users Request",
+		"Status": true,
+		"users": users,
 	})
 }
 
@@ -31,6 +37,18 @@ func CreateUser(c *fiber.Ctx) error{
 	db.Create(&user)
 
 	return c.Status(http.StatusCreated).JSON(fiber.Map{
-		"message": "User created",
+		"status": true,
+		"message": "User created successfuly",
+	})
+}
+
+func DeleteUser(c *fiber.Ctx) error{
+	db := core.DB
+	
+	db.Delete(&model.User{}, c.Params("id"))
+
+	return c.Status(http.StatusOK).JSON(fiber.Map{
+		"status": true,
+		"message": "User deleted successfuly",
 	})
 }
