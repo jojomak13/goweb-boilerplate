@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
+	"github.com/jojomak13/goweb-biolerplate/config"
 	"github.com/jojomak13/goweb-biolerplate/core"
 	"github.com/jojomak13/goweb-biolerplate/router"
 
@@ -12,9 +14,11 @@ import (
 func main() {
 	app := fiber.New()
 
-	core.ConnectDB()
+	config := config.LoadConfigration()
+
+	core.ConnectDB(config)
 
 	router.SetupRoutes(app)
 
-	log.Fatal(app.Listen(":8080"))
+	log.Fatal(app.Listen(fmt.Sprintf(":%v", config.Port)))
 }
