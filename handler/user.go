@@ -9,19 +9,19 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func GetUsers(c *fiber.Ctx) error{
+func GetUsers(c *fiber.Ctx) error {
 	db := core.DB
 	users := new([]model.User)
 
 	db.Find(&users)
 
 	return c.JSON(fiber.Map{
-		"Status": true,
-		"users": users,
+		"status": true,
+		"users":  users,
 	})
 }
 
-func CreateUser(c *fiber.Ctx) error{
+func CreateUser(c *fiber.Ctx) error {
 	db := core.DB
 	user := new(model.User)
 
@@ -29,26 +29,28 @@ func CreateUser(c *fiber.Ctx) error{
 
 	if errors := core.NewValidator(user); errors != nil {
 		return c.Status(http.StatusBadRequest).JSON(fiber.Map{
-			"Status": "Bad Request",
+			"status": false,
 			"errors": errors,
 		})
 	}
 
+	user.Password = core.HashPassword(user.Password)
+
 	db.Create(&user)
 
 	return c.Status(http.StatusCreated).JSON(fiber.Map{
-		"status": true,
+		"status":  true,
 		"message": "User created successfuly",
 	})
 }
 
-func DeleteUser(c *fiber.Ctx) error{
+func DeleteUser(c *fiber.Ctx) error {
 	db := core.DB
-	
+
 	db.Delete(&model.User{}, c.Params("id"))
 
 	return c.Status(http.StatusOK).JSON(fiber.Map{
-		"status": true,
+		"status":  true,
 		"message": "User deleted successfuly",
 	})
 }
